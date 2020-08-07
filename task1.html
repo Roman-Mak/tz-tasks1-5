@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>task 1</title>
+    <style>
+        .red {
+            color: red;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-top: 200px;
+        }
+    </style>
+    <script>
+        window.addEventListener("load", () => {
+            let input = document.getElementById("name_input");
+            let startValue = input.value;
+
+            const inputChange = (e) => {
+                input.value = e.currentTarget.value;
+                if (input.value !== startValue) {
+                    input.setAttribute("class", "red");
+                } else {
+                    input.removeAttribute("class");
+                }
+            };
+
+            input.addEventListener("input", inputChange);
+        });
+    </script>
+</head>
+<body>
+<div class="container">
+    <label for="name_input">value: </label>
+    <input type="text" name="name" id="name_input" value="Xxxx">
+</div>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>task 3</title>
+    <script>
+        const getEmployees = () => new Promise((res, rej) => {
+            const api = `https://reqres.in/api/users?per_page=12`;
+            const request = new XMLHttpRequest();
+            request.open("GET", api);
+            request.onload = () =>
+                (request.status === 200) ?
+                    res(request.response) :
+                    rej(Error(request.statusText));
+            request.onerror = (err) => rej(err);
+            request.send()
+        });
+
+        const getNumData = () => new Promise((res, rej) => {
+            const api = `http://numbersapi.com/43`;
+            const request = new XMLHttpRequest();
+            request.open("GET", api);
+            request.onload = () =>
+                (request.status === 200) ?
+                    res(request.response) :
+                    rej(Error(request.statusText));
+            request.onerror = (err) => rej(err);
+            request.send()
+        });
+
+        Promise.all([getEmployees(), getNumData()])
+            .then((() => console.log("оба ответа получены")))
+            .catch(() => console.log("ошибка"))
+    </script>
+</head>
+<body>
+</body>
+</html>

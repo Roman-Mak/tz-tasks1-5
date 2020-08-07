@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>domain tow</title>
+</head>
+<body>
+<h1>Domain Two</h1>
+</body>
+<script>
+    window.addEventListener("message", (e) => {
+        const payload = e.data;
+        const parent = window.parent;
+        switch (payload.method) {
+            case "set":
+                localStorage.setItem(payload.key, JSON.stringify(payload.data));
+                parent.postMessage({message: "written", method: "send"}, "*");
+                break;
+            case "get":
+                const data = JSON.parse(localStorage.getItem(payload.key));
+                parent.postMessage({message: data, method: "get"}, "*");
+                break;
+            case "remove":
+                localStorage.removeItem(payload.key);
+                parent.postMessage({message: "removed", method: "remove"}, "*");
+                break;
+        }
+    });
+</script>
+</html>

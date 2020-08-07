@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>task 4</title>
+</head>
+<body>
+<h1>Domain One</h1>
+<iframe src="task-4-5-domain-two.html"></iframe>
+<div>
+    <label for="input">value: </label>
+    <input id="input" type="text"/>
+    <button id="set">Set data</button>
+</div>
+<button id="get">Get data</button>
+<button id="remove">Remove data</button>
+</body>
+<script>
+    const callbacksObj = {
+        getCallback() {
+            console.log("callback after reading");
+        },
+        removedCallback() {
+            console.log("callback after removing");
+        },
+        writtenCallback() {
+            console.log("callback after sending");
+        },
+    };
+
+    window.addEventListener("message", (e) => {
+        const payload = e.data;
+        if (payload.message) {
+            console.log(payload.message);
+            switch (payload.method) {
+                case "get":
+                    callbacksObj.getCallback();
+                    break;
+                case "send":
+                    callbacksObj.writtenCallback();
+                    break;
+                case "remove":
+                    callbacksObj.removedCallback();
+            }
+        } else {
+            console.log("no data");
+        }
+    });
+
+    window.addEventListener("load", () => {
+        const win = document.getElementsByTagName("iframe")[0].contentWindow;
+
+        const localStorageAction = (key, method, message) => () => {
+            win.postMessage({key, method, data: message}, "*");
+        };
+
+        const onSetClick = () => {
+            let input = document.getElementById("input");
+            localStorageAction("test", "set", input.value)();
+            input.value = "";
+        };
+
+        let getBtn = document.getElementById("get");
+        getBtn.addEventListener("click", localStorageAction("test", "get"));
+
+        let removeBtn = document.getElementById("remove");
+        removeBtn.addEventListener("click", localStorageAction("test", "remove"));
+
+        let setBtn = document.getElementById("set");
+        setBtn.addEventListener("click", onSetClick);
+    });
+</script>
+</html>

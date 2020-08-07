@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>task 2</title>
+    <style>
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-top: 200px;
+        }
+        #select-manufacturer {
+            width: 100px;
+            height: 100px;
+        }
+    </style>
+    <script>
+        window.addEventListener("load", () => {
+            let elementsToCheck = document.querySelectorAll(".size, .color, .manufacturer");
+
+            const loadDefaultSetting = () => {
+                // для тестирования queryString задана вручную
+                // на реальном проекте я бы использовал document.location.search
+                let queryString = "?size=M&color=1&color=2&manufacturer=aaa&manufacturer=ddd";
+                let params = queryString.split("?")[1].split("&");
+                params.forEach(p => {
+                    let [className, value] = p.split("=");
+                    elementsToCheck.forEach(el => {
+                        if (el.className === className) {
+                            if (el.value === value) {
+                                if (el.checked !== undefined) {
+                                    el.checked = true;
+                                } else {
+                                    el.selected = true;
+                                }
+                            }
+                        }
+                    })
+                })
+            };
+
+            const onChangeListener = () => {
+                let queryParams = [];
+                elementsToCheck.forEach(el => {
+                    if (el.checked || el.selected) {
+                        queryParams.push(`${el.className}=${el.value}`);
+                    }
+                });
+                let queryString = `/filter?${queryParams.join("&")}`;
+                let {origin, pathname} = window.location;
+                let url = origin + pathname + queryString;
+                console.log(url);
+            };
+
+            let elementsToListen = document.querySelectorAll(".size, .color, #select-manufacturer");
+
+            elementsToListen.forEach(el => el.addEventListener("change", onChangeListener));
+
+            loadDefaultSetting();
+        })
+    </script>
+</head>
+<body>
+<div class="container">
+    <div>
+        <input class="size" type="radio" id="size-S" name="size" value="S"/>
+        <label for="size-S">small</label>
+        <input class="size" type="radio" id="size-M" name="size" value="M"/>
+        <label for="size-M">medium</label>
+        <input class="size" type="radio" id="size-L" name="size" value="L"/>
+        <label for="size-L">large</label>
+    </div>
+    <div>
+        <input class="color" type="checkbox" id="color-1" value="1"/>
+        <label for="color-1">color1</label>
+        <input class="color" type="checkbox" id="color-2" value="2"/>
+        <label for="color-2">color2</label>
+        <input class="color" type="checkbox" id="color-3" value="3"/>
+        <label for="color-3">color3</label>
+        <input class="color" type="checkbox" id="color-4" value="4"/>
+        <label for="color-4">color4</label>
+        <input class="color" type="checkbox" id="color-5" value="5"/>
+        <label for="color-5">color5</label>
+    </div>
+    <div>
+        <label>
+            <select multiple id="select-manufacturer">
+                <option class="manufacturer" value="aaa">aaa</option>
+                <option class="manufacturer" value="b&c">b&c</option>
+                <option class="manufacturer" value="ddd">ddd</option>
+                <option class="manufacturer" value="eee">eee</option>
+            </select>
+        </label>
+    </div>
+    <div>
+        <input class="sale" type="checkbox" id="sale" value="1"/>
+        <label for="sale">sale</label>
+    </div>
+</div>
+</body>
+</html>
